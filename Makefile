@@ -15,6 +15,6 @@ clean :
 	rm -f *.hex
 
 led.o : led.S
-	$(RISCVGNU)-as $(AOPS) led.S -o led.o
+	$(RISCVGNU)-as $(AOPS) led.S uart.S -o led.o
 	$(RISCVGNU)-ld led.o -T memmap -o led.elf 
 	$(RISCVGNU)-objcopy led.elf -O ihex led.hex
