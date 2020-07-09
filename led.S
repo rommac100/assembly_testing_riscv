@@ -2,10 +2,14 @@
 .global _start
 
 .include "gpio.inc"
+.include "clock.inc"
 
 _start:
-	la a2, msg
-	call _uartTransLine
+	li a1, 0b0 #Set div to 0
+	li a2, 0x1F #Set trimmer to 31
+	# call _setupRingOscc
+	call _pwmEn	
+	j exit
 
 _setupGPIO:
 	addi sp, sp, -16 # store the return address

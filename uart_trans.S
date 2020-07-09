@@ -4,11 +4,11 @@
 .include "uart.inc"
 
 _uartTransLine:
-	addi sp, sp, -16
-	sw ra, 12(sp)
-	li t0, UART_CTRL_ADDR_0
+	addi sp, sp, -16 # move back store pointer to ad return address to the stack
+	sw ra, 12(sp) # store return address to the stack
+	li t0, UART_CTRL_ADDR_0 # load the address for the UART base address
 	mv t1, x0 # have t1 be the storage of the byte of the line
-	mv t5, a2
+	mv t5, a2 # store the address of the string to t5 register for easier manipulation
 
 transLine:
 	lb t1, (t5)	
@@ -20,7 +20,7 @@ transLine:
 transByte:
 	lw t2, 0(t0)
 	li t3, 0x80000000
-	bne t2, t3, send
+	bne t2, t3, transByte
 	beq t2, t3, wait
 
 _uartTransByte:
@@ -31,9 +31,6 @@ _uartTransByte:
 	mv t1, a2
 	call transByte
 	j exit_uart
-wait:
-	lw t2, 0(t0)
-	beq t2,t3,wait	
 
 send:
 	sw t1, 0(t0)		
